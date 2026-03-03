@@ -1,12 +1,16 @@
-# ☁️ Project 5: Static Website Deployment on Azure — Group 5
+# Static Website Deployment on Azure — Group 5
+
+> [!IMPORTANT]
+> **Project Status:** The Azure Virtual Machine associated with this deployment has been **deallocated (shut down)** to manage cloud costs and preserve credits.
+>
+> **Evidence of Deployment:** > Please refer to the `/screenshots` directory in this repository to view the live site in action, the NGINX configuration, and the successful Azure CLI provisioning logs.
 
 A static portfolio website built with **React + Vite + TypeScript**, deployed to an **Azure Virtual Machine** in the South Africa North region, served via **NGINX**, and fully automated with **GitHub Actions CI/CD**.
 
-> 🌐 **Live URL:** [http://4.222.216.97](http://4.222.216.97)
 
 ---
 
-## 📸 Screenshots
+##  Screenshots
 
 ### Landing Page
 ![Landing Page](./screenshots/screenshot%20of%20the%20landing%20page%20of%20the%20website.png)
@@ -17,9 +21,15 @@ A static portfolio website built with **React + Vite + TypeScript**, deployed to
 ### Successful GitHub Actions Workflow Run
 ![Successful Workflow](./screenshots/preview%20of%20successful%20workflow%20run.png)
 
+### Azure VM Provisioning & NGINX Setup (1 of 2)
+![Azure Provisioning Part 1](./screenshots/screnshot%201%20showing%20provisionaing%20of%20vm%20and%20set%20up%20nginx%20server.png)
+
+### Azure VM Provisioning & NGINX Setup (2 of 2)
+![Azure Provisioning Part 2](./screenshots/screnshot%202%20showing%20provisionaing%20of%20vm%20and%20set%20up%20nginx%20server.png)
+
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 
 ```
 portfolio-react/
@@ -43,7 +53,7 @@ portfolio-react/
 
 ---
 
-## 🏗️ Architecture Overview
+##  Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -80,13 +90,13 @@ portfolio-react/
 │   └─────────────────────────────────────────────┘           │
 │                                                              │
 │   NGINX serves /var/www/portfolio on port 80                 │
-│   Public IP: 4.222.216.97                                    │
+│   97                                    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## ☁️ Cloud Infrastructure
+##  Cloud Infrastructure
 
 | Resource          | Name                   | Details                          |
 |-------------------|------------------------|----------------------------------|
@@ -100,11 +110,11 @@ portfolio-react/
 | Security Type     | Trusted Launch          | Secure Boot + vTPM               |
 | Public IP         | `4.222.216.97`         | Standard SKU                     |
 | Web Server        | NGINX                  | Latest (Ubuntu package)          |
-| Subscription ID   | `5c0030e1-9bac-41d3-b6ec-3d4d175e771b` | —               |
+
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 ### Website
 | Technology        | Version     | Purpose                        |
@@ -129,7 +139,7 @@ portfolio-react/
 
 ---
 
-## 🚀 Deployment Pipeline (GitHub Actions)
+##  Deployment Pipeline (GitHub Actions)
 
 The pipeline in `.github/workflows/deploy.yml` automatically triggers on every push to `main`:
 
@@ -150,12 +160,12 @@ The pipeline in `.github/workflows/deploy.yml` automatically triggers on every p
 | Secret Name         | Description                                      |
 |---------------------|--------------------------------------------------|
 | `VM_SSH_PRIVATE_KEY`| RSA private key matching the VM's authorized key |
-| `VM_HOST`           | Public IP address of the VM (`4.222.216.97`)     |
-| `VM_USER`           | SSH username (`creeksonjoseph`)                  |
+| `VM_HOST`           | Public IP address of the VM (`4.222.216.97`)    
+                
 
 ---
 
-## 📜 Scripts
+## Scripts
 
 ### `scripts/provision.sh` — Azure Infrastructure Provisioning
 This script provisions the **complete Azure infrastructure from scratch** using the Azure CLI. It is intended to be run once by a developer who has `az login` completed.
@@ -198,7 +208,7 @@ ssh -i static-_key.pem creeksonjoseph@4.222.216.97 'bash -s' < scripts/setup-ngi
 
 ---
 
-## ⚙️ NGINX Configuration
+##  NGINX Configuration
 
 NGINX is configured to serve the React SPA with:
 
@@ -210,7 +220,7 @@ NGINX is configured to serve the React SPA with:
 
 ---
 
-## 🔐 Security
+##  Security
 
 - SSH password authentication is **disabled** on the VM; only the provisioned public key is accepted.
 - VM uses **Trusted Launch** with Secure Boot and vTPM enabled.
@@ -220,7 +230,7 @@ NGINX is configured to serve the React SPA with:
 
 ---
 
-## 🌐 Local Development
+##  Local Development
 
 ```bash
 # Clone the repository
@@ -239,7 +249,7 @@ npm run build
 
 ---
 
-## 🎯 Design Choices & Decision Log
+##  Design Choices & Decision Log
 
 | Decision | Choice Made | Rationale |
 |----------|-------------|-----------|
@@ -262,7 +272,4 @@ npm run build
 
 ---
 
-## 👥 Group 5
 
-Cloud Computing — Project 5: Static Website Deployment
-> Azure · NGINX · React · GitHub Actions
