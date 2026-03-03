@@ -1,3 +1,8 @@
+# Secrets & SSH Keys
+*.pem
+static-_key.pem
+githubsecrets.env
+
 # Logs
 logs
 *.log

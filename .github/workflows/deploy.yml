@@ -1,0 +1,67 @@
+name: Deploy Portfolio to Azure VM
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout code ────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Setup Node.js ────────────────────────────────────────────────────
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # ── 3. Install dependencies ─────────────────────────────────────────────
+      - name: Install dependencies
+        run: npm ci
+
+      # ── 4. Build the React/Vite app ─────────────────────────────────────────
+      - name: Build
+        run: npm run build
+
+      # ── 5. Setup SSH key ────────────────────────────────────────────────────
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.VM_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
+
+      # ── 6. Deploy build output to VM ────────────────────────────────────────
+      - name: Deploy to VM via rsync
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
+            dist/ \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/var/www/portfolio/
+
+      # ── 7. Reload NGINX ─────────────────────────────────────────────────────
+      - name: Reload NGINX
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
+            "sudo systemctl reload nginx && echo 'NGINX reloaded successfully'"
+
+      # ── 8. Verify deployment ────────────────────────────────────────────────
+      - name: Verify site is live
+        run: |
+          sleep 3
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://${{ secrets.VM_HOST }})
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "❌ Site returned HTTP $STATUS — deployment may have failed"
+            exit 1
+          fi
+          echo "✅ Site is live at http://${{ secrets.VM_HOST }}"
