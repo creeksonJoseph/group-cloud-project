@@ -38,7 +38,13 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H ${{ secrets.VM_HOST }} >> ~/.ssh/known_hosts
 
-      # ── 6. Deploy build output to VM ────────────────────────────────────────
+      # ── 6. Configure NGINX on VM ────────────────────────────────────────────
+      - name: Configure NGINX on VM
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no scripts/setup-nginx.sh ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/tmp/setup-nginx.sh
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} "bash /tmp/setup-nginx.sh"
+
+      # ── 7. Deploy build output to VM ────────────────────────────────────────
       - name: Deploy to VM via rsync
         run: |
           rsync -avz --delete \
@@ -46,7 +52,7 @@ jobs:
             dist/ \
             ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }}:/var/www/portfolio/
 
-      # ── 7. Reload NGINX ─────────────────────────────────────────────────────
+      # ── 8. Reload NGINX ─────────────────────────────────────────────────────
       - name: Reload NGINX
         run: |
           ssh -i ~/.ssh/deploy_key \
@@ -54,7 +60,7 @@ jobs:
             ${{ secrets.VM_USER }}@${{ secrets.VM_HOST }} \
             "sudo systemctl reload nginx && echo 'NGINX reloaded successfully'"
 
-      # ── 8. Verify deployment ────────────────────────────────────────────────
+      # ── 9. Verify deployment ────────────────────────────────────────────────
       - name: Verify site is live
         run: |
           sleep 3

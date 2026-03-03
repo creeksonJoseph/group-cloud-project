@@ -10,15 +10,15 @@
 set -e
 
 # ─── VARIABLES ────────────────────────────────────────────────────────────────
-RESOURCE_GROUP="portfolio-rg"
-LOCATION="eastus"
-VNET_NAME="portfolio-vnet"
-SUBNET_NAME="portfolio-subnet"
-NSG_NAME="portfolio-nsg"
-VM_NAME="portfolio-vm"
-VM_SIZE="Standard_B1s"
+RESOURCE_GROUP="group-cloud-project"
+LOCATION="southafricanorth"
+VNET_NAME="static-vnet"
+SUBNET_NAME="static-subnet"
+NSG_NAME="static-nsg"
+VM_NAME="static-vm"
+VM_SIZE="Standard_B2ats_v2"
 ADMIN_USERNAME="creeksonjoseph"
-IMAGE="Ubuntu2204"
+IMAGE="Ubuntu2404"
 SSH_KEY_PATH="./static-_key.pem"
 
 echo "============================================="

@@ -15,6 +15,12 @@ echo "============================================="
 echo " Group 5 — NGINX Server Setup"
 echo "============================================="
 
+# ─── 0. IDEMPOTENCY CHECK ─────────────────────────────────────────────────────
+if [ -f /etc/nginx/sites-available/portfolio ] && command -v nginx > /dev/null; then
+    echo "✅ NGINX is already installed and configured. Skipping setup."
+    exit 0
+fi
+
 # ─── 1. UPDATE PACKAGES ───────────────────────────────────────────────────────
 echo "[1/5] Updating package list..."
 sudo apt-get update -y
